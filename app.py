@@ -9,7 +9,6 @@ st.set_page_config(page_title="HBD", page_icon="🎂", layout="centered")
 def trigger_full_celebration():
     st.balloons()
     st.snow()
-    # كود الألعاب النارية
     st.markdown(
         """
         <style>
@@ -39,63 +38,56 @@ def trigger_full_celebration():
         unsafe_allow_html=True
     )
 
-# دالة لرسم القلب الكبير المتحرك
-def draw_large_heart():
-    # كود HTML ورسم CSS لقلب كبير متحرك (Pulse)
+# دالة رسم القلب الشفاف (بدون خلفية بيضاء)
+def draw_transparent_heart():
     st.markdown(
         """
         <style>
-        .heart-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        .heart-overlay {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100vh;
-          background-color: rgba(255, 255, 255, 0.9);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: transparent; /* جعل الخلفية شفافة تماماً */
           z-index: 10000;
-          pointer-events: none;
+          pointer-events: none; /* عشان ما يمنع الضغط على الأزرار */
         }
-        .heart {
-          background-color: #FF4B4B;
-          display: inline-block;
-          height: 150px;
+        .heart-pen {
           position: relative;
-          transform: rotate(-45deg);
-          width: 150px;
-          animation: pulse 1s ease infinite, fadeOut 1s ease-out 4s forwards;
+          width: 100px;
+          height: 90px;
+          animation: heartAppear 5s forwards;
         }
-        .heart:before,
-        .heart:after {
-          content: "";
-          background-color: #FF4B4B;
-          border-radius: 50%;
-          height: 150px;
+        .heart-pen:before, .heart-pen:after {
           position: absolute;
-          width: 150px;
-        }
-        .heart:before {
-          top: -75px;
-          left: 0;
-        }
-        .heart:after {
-          left: 75px;
+          content: "";
+          left: 50px;
           top: 0;
+          width: 50px;
+          height: 80px;
+          background: #FF4B4B;
+          border-radius: 50px 50px 0 0;
+          transform: rotate(-45deg);
+          transform-origin: 0 100%;
         }
-        @keyframes pulse {
-          0% { transform: scale(1) rotate(-45deg); }
-          50% { transform: scale(1.1) rotate(-45deg); }
-          100% { transform: scale(1) rotate(-45deg); }
+        .heart-pen:after {
+          left: 0;
+          transform: rotate(45deg);
+          transform-origin: 100% 100%;
         }
-        @keyframes fadeOut {
-          0% { opacity: 1; }
-          100% { opacity: 0; }
+        @keyframes heartAppear {
+          0% { transform: scale(0); opacity: 0; }
+          20% { transform: scale(1.5); opacity: 0.8; }
+          80% { transform: scale(1.5); opacity: 0.8; }
+          100% { transform: scale(0); opacity: 0; }
         }
         </style>
-        <div class="heart-container" id="heart-container">
-          <div class="heart"></div>
+        <div class="heart-overlay">
+          <div class="heart-pen"></div>
         </div>
         """,
         unsafe_allow_html=True
@@ -116,13 +108,13 @@ if not st.session_state.authenticated:
         else:
             st.error("الرمز خطأ، ")
 else:
-    # رسم القلب الكبير فوراً عند الدخول (يختفي بعد 5 ثوانٍ تلقائياً)
-    draw_large_heart()
+    # يظهر القلب الشفاف فوق المحتوى ويختفي بعد 5 ثواني
+    draw_transparent_heart()
     
     # 2. واجهة الموقع
     st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎊 كل عام وانتي بخير ياروحي وكلعام وانتي لي 🎊</h1>", unsafe_allow_html=True)
 
-    # --- قسم العداد الزمني (Countup) ---
+    # --- قسم العداد الزمني ---
     birth_date = datetime(2007 , 4 , 28 , 12 , 0)
     now = datetime.now()
     diff = now - birth_date
@@ -148,29 +140,22 @@ else:
                 trigger_full_celebration()
                 st.rerun()
         else:
-            trigger_full_celebration() # لتستمر الألعاب النارية والبالونات بالظهور
+            trigger_full_celebration()
             st.success(" امسكي لبى قلبس")
-
-            # 1. الرسالة الخاصة
             st.markdown("""
             ### ل اغلى شخص بحياتي من ونا صغير في يوم ميلادك هذي هديتي البسيطة لك واتمنى دايم يوم ميلادك انك معي دهر هيوفتي ولا بنفترق احبك مره يااعز شخص بحياتي
             """)
-
-            # 2. قسم الموسيقى
             st.write("---")
             st.write("🎵 **هذي اغنية لس امووووووووواح :**")
-            # رابط الأغنية الخاص بك
             st.video("https://youtu.be/WflC7u8pDfU?si=Xhlo6H6kjRVUX_qx")
 
             if st.button('باي باي اضغطي عشان تتقفل لس وحده ثانية يوم ميلادك الجاي', key="close_gift"):
                 st.session_state.gift_opened = False
                 st.rerun()
 
-    # --- تذييل الصفحة ---
     st.divider()
     st.caption("صنع بكل حب لهيوفتي من احمد ") 
     
-    # زر للخروج وقفل الموقع مرة ثانية
     if st.sidebar.button("قفل الموقع 🔒", key="logout_sidebar"):
         st.session_state.authenticated = False
         st.rerun()
