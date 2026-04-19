@@ -39,6 +39,68 @@ def trigger_full_celebration():
         unsafe_allow_html=True
     )
 
+# دالة لرسم القلب الكبير المتحرك
+def draw_large_heart():
+    # كود HTML ورسم CSS لقلب كبير متحرك (Pulse)
+    st.markdown(
+        """
+        <style>
+        .heart-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          background-color: rgba(255, 255, 255, 0.9);
+          z-index: 10000;
+          pointer-events: none;
+        }
+        .heart {
+          background-color: #FF4B4B;
+          display: inline-block;
+          height: 150px;
+          position: relative;
+          transform: rotate(-45deg);
+          width: 150px;
+          animation: pulse 1s ease infinite, fadeOut 1s ease-out 4s forwards;
+        }
+        .heart:before,
+        .heart:after {
+          content: "";
+          background-color: #FF4B4B;
+          border-radius: 50%;
+          height: 150px;
+          position: absolute;
+          width: 150px;
+        }
+        .heart:before {
+          top: -75px;
+          left: 0;
+        }
+        .heart:after {
+          left: 75px;
+          top: 0;
+        }
+        @keyframes pulse {
+          0% { transform: scale(1) rotate(-45deg); }
+          50% { transform: scale(1.1) rotate(-45deg); }
+          100% { transform: scale(1) rotate(-45deg); }
+        }
+        @keyframes fadeOut {
+          0% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        </style>
+        <div class="heart-container" id="heart-container">
+          <div class="heart"></div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # --- نظام التأمين بكلمة المرور ---
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
@@ -47,13 +109,16 @@ if not st.session_state.authenticated:
     st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك في يوم ميلادس</h2>", unsafe_allow_html=True)
     password = st.text_input("الرمز السريييييييي :", type="password")
     
-    if st.button("دخول"):
+    if st.button("دخول", key="login_btn"): 
         if password == "0551099008rahaf_gift": 
             st.session_state.authenticated = True
             st.rerun()
         else:
             st.error("الرمز خطأ، ")
 else:
+    # رسم القلب الكبير فوراً عند الدخول (يختفي بعد 5 ثوانٍ تلقائياً)
+    draw_large_heart()
+    
     # 2. واجهة الموقع
     st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎊 كل عام وانتي بخير ياروحي وكلعام وانتي لي 🎊</h1>", unsafe_allow_html=True)
 
@@ -78,12 +143,12 @@ else:
 
     with col2:
         if not st.session_state.gift_opened:
-            if st.button('اضغطي هنا '):
+            if st.button('اضغطي هنا ', key="open_gift"):
                 st.session_state.gift_opened = True
                 trigger_full_celebration()
                 st.rerun()
         else:
-            trigger_full_celebration() # لتستمر الألعاب النارية بالظهور
+            trigger_full_celebration() # لتستمر الألعاب النارية والبالونات بالظهور
             st.success(" امسكي لبى قلبس")
 
             # 1. الرسالة الخاصة
@@ -94,10 +159,10 @@ else:
             # 2. قسم الموسيقى
             st.write("---")
             st.write("🎵 **هذي اغنية لس امووووووووواح :**")
-            youtube_url = "https://youtu.be/WflC7u8pDfU?si=Xhlo6H6kjRVUX_qx"
-            st.video(youtube_url)
+            # رابط الأغنية الخاص بك
+            st.video("https://youtu.be/WflC7u8pDfU?si=Xhlo6H6kjRVUX_qx")
 
-            if st.button('باي باي اضغطي عشان تتقفل لس وحده ثانية يوم ميلادك الجاي'):
+            if st.button('باي باي اضغطي عشان تتقفل لس وحده ثانية يوم ميلادك الجاي', key="close_gift"):
                 st.session_state.gift_opened = False
                 st.rerun()
 
@@ -106,10 +171,6 @@ else:
     st.caption("صنع بكل حب لهيوفتي من احمد ") 
     
     # زر للخروج وقفل الموقع مرة ثانية
-    if st.sidebar.button("قفل الموقع 🔒"):
-        st.session_state.authenticated = False
-        st.rerun()
-    # زر للخروج وقفل الموقع مرة ثانية
-    if st.sidebar.button("قفل الموقع 🔒"):
+    if st.sidebar.button("قفل الموقع 🔒", key="logout_sidebar"):
         st.session_state.authenticated = False
         st.rerun()
