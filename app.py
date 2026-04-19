@@ -10,7 +10,7 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.markdown("<h2 style='text-align: center;'>🔒 الموقع محمي</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك 28\4</h2>", unsafe_allow_html=True)
     # تقدر تغير كلمة المرور من هنا، حالياً هي 1234
     password = st.text_input("الرمز السريييييييي :", type="password")
     
@@ -65,7 +65,7 @@ else:
             # 2. قسم الموسيقى
             st.write("---")
             st.write("🎵 **هذي اغنية لس امووووووووواح :**")
-            youtube_url = "https://youtu.be/12xwGu-Bv6o?si=P81LdnqzKLJ2cSQx"
+            youtube_url = "https://youtu.be/WflC7u8pDfU?si=Xhlo6H6kjRVUX_qx"
             st.video(youtube_url)
 
             if st.button('باي باي اضغطي عشان تتقفل لس وحده ثانية يوم ميلادك الجاي'):
