@@ -38,7 +38,35 @@ def trigger_full_celebration():
         unsafe_allow_html=True
     )
 
-# دالة رسم القلب الشفاف (بدون خلفية بيضاء)
+# دالة رسم القلوب المتحركة في شاشة الرمز (تختفي بعد 7 ثواني)
+def login_screen_hearts():
+    st.markdown(
+        """
+        <style>
+        @keyframes floatingHearts {
+          0% { transform: translateY(0px) scale(0); opacity: 0; }
+          50% { transform: translateY(-100px) scale(1.2); opacity: 0.8; }
+          100% { transform: translateY(-200px) scale(0); opacity: 0; }
+        }
+        .heart-bg {
+          position: fixed;
+          font-size: 30px;
+          color: #FF4B4B;
+          animation: floatingHearts 7s forwards;
+          z-index: 0;
+          pointer-events: none;
+        }
+        </style>
+        <div class="heart-bg" style="top:80%; left:15%;">❤️</div>
+        <div class="heart-bg" style="top:70%; left:35%; animation-delay:1s;">💖</div>
+        <div class="heart-bg" style="top:85%; left:55%; animation-delay:2s;">❤️</div>
+        <div class="heart-bg" style="top:75%; left:75%; animation-delay:3s;">💕</div>
+        <div class="heart-bg" style="top:80%; left:90%; animation-delay:4.5s;">❤️</div>
+        """, 
+        unsafe_allow_html=True
+    )
+
+# دالة رسم القلب الشفاف (الذي يظهر بعد الدخول)
 def draw_transparent_heart():
     st.markdown(
         """
@@ -52,9 +80,9 @@ def draw_transparent_heart():
           display: flex;
           justify-content: center;
           align-items: center;
-          background: transparent; /* جعل الخلفية شفافة تماماً */
+          background: transparent;
           z-index: 10000;
-          pointer-events: none; /* عشان ما يمنع الضغط على الأزرار */
+          pointer-events: none;
         }
         .heart-pen {
           position: relative;
@@ -98,6 +126,9 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
+    # تشغيل القلوب المتحركة عند شاشة إدخال الرمز
+    login_screen_hearts()
+    
     st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك في يوم ميلادس</h2>", unsafe_allow_html=True)
     password = st.text_input("الرمز السريييييييي :", type="password")
     
@@ -108,7 +139,7 @@ if not st.session_state.authenticated:
         else:
             st.error("الرمز خطأ، ")
 else:
-    # يظهر القلب الشفاف فوق المحتوى ويختفي بعد 5 ثواني
+    # يظهر القلب الشفاف عند الدخول الصحيح
     draw_transparent_heart()
     
     # 2. واجهة الموقع
