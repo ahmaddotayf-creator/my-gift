@@ -10,7 +10,7 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك 28\4</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك في يوم ميلادس</h2>", unsafe_allow_html=True)
     # تقدر تغير كلمة المرور من هنا، حالياً هي 1234
     password = st.text_input("الرمز السريييييييي :", type="password")
     
