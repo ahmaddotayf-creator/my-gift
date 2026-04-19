@@ -5,13 +5,46 @@ from datetime import datetime
 # 1. إعدادات الصفحة
 st.set_page_config(page_title="HBD", page_icon="🎂", layout="centered")
 
+# دالة الاحتفال الكاملة (بالونات + ألعاب نارية + ثلج)
+def trigger_full_celebration():
+    st.balloons()
+    st.snow()
+    # كود الألعاب النارية
+    st.markdown(
+        """
+        <style>
+        @keyframes fireworks {
+          0% { transform: scale(0); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: scale(2); opacity: 0; }
+        }
+        .firework {
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          animation: fireworks 1.5s ease-out infinite;
+          z-index: 999;
+        }
+        .f1 { background: #FF4B4B; top: 20%; left: 20%; animation-delay: 0s; }
+        .f2 { background: #FFD700; top: 50%; left: 80%; animation-delay: 0.3s; }
+        .f3 { background: #00BCD4; top: 80%; left: 40%; animation-delay: 0.6s; }
+        .f4 { background: #FF00FF; top: 30%; left: 60%; animation-delay: 0.9s; }
+        </style>
+        <div class="firework f1"></div>
+        <div class="firework f2"></div>
+        <div class="firework f3"></div>
+        <div class="firework f4"></div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # --- نظام التأمين بكلمة المرور ---
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
     st.markdown("<h2 style='text-align: center;'>🔒 الموقع مقفل ! الرمز يجيك في يوم ميلادس</h2>", unsafe_allow_html=True)
-    # تقدر تغير كلمة المرور من هنا، حالياً هي 1234
     password = st.text_input("الرمز السريييييييي :", type="password")
     
     if st.button("دخول"):
@@ -21,11 +54,6 @@ if not st.session_state.authenticated:
         else:
             st.error("الرمز خطأ، ")
 else:
-    # --- دالة الاحتفال (بالونات وثلج) ---
-    def celebrate():
-        st.balloons()
-        st.snow()
-
     # 2. واجهة الموقع
     st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>🎊 كل عام وانتي بخير ياروحي وكلعام وانتي لي 🎊</h1>", unsafe_allow_html=True)
 
@@ -52,9 +80,10 @@ else:
         if not st.session_state.gift_opened:
             if st.button('اضغطي هنا '):
                 st.session_state.gift_opened = True
-                celebrate()
+                trigger_full_celebration()
                 st.rerun()
         else:
+            trigger_full_celebration() # لتستمر الألعاب النارية بالظهور
             st.success(" امسكي لبى قلبس")
 
             # 1. الرسالة الخاصة
@@ -76,6 +105,10 @@ else:
     st.divider()
     st.caption("صنع بكل حب لهيوفتي من احمد ") 
     
+    # زر للخروج وقفل الموقع مرة ثانية
+    if st.sidebar.button("قفل الموقع 🔒"):
+        st.session_state.authenticated = False
+        st.rerun()
     # زر للخروج وقفل الموقع مرة ثانية
     if st.sidebar.button("قفل الموقع 🔒"):
         st.session_state.authenticated = False
